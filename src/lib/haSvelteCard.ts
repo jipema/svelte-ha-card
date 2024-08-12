@@ -1,11 +1,17 @@
 // @ts-nocheck
 import type { SvelteComponent } from "svelte";
-import type { HassProps } from "../types/hass";
+import type { HassSvelteCardProps } from "./types";
+import CardWrapper from "./components/CardWrapper.svelte";
 
-export function getSvelteHaCustomElement(cardName: string, Component: Partial<SvelteComponent>) {
+export function getSvelteHaCard(
+  cardName: string,
+  Component: Partial<SvelteComponent>,
+  wrapInHaCard?: boolean = true,
+  stubConfig?: unknown = {}
+) {
   return class SvelteHaCustomElement extends HTMLElement {
     _element: HTMLElement | undefined = undefined;
-    _haProps: HassProps = {
+    _haProps: Partial<HassSvelteCardProps> = {
       hass: undefined,
       lovelace: undefined,
       panel: undefined,
@@ -14,12 +20,13 @@ export function getSvelteHaCustomElement(cardName: string, Component: Partial<Sv
       config: undefined,
       isConfig: false,
       updateConfig: undefined,
+      wrapInHaCard,
     };
     _ready: boolean = false;
 
     connectedCallback() {
       if (!Component) return console.error("Invalid/empty Svelte Component passed to constructor", Component);
-      this._element = new Component({ target: this });
+      this._element = new CardWrapper({ target: this, props: { ...this._haProps, CardComponent: Component } });
       if (!this._element?.$set)
         return console.error("Unable to instantiate Svelte Component as Custom Element", this._element);
       this._element.$set(this._haProps);
@@ -55,13 +62,13 @@ export function getSvelteHaCustomElement(cardName: string, Component: Partial<Sv
 
     // card config
     static getStubConfig() {
-      return { entity: "sun.sun", updated: null };
+      return stubConfig;
     }
     static getConfigElement() {
       const configCard = document.createElement(`${cardName}`);
       configCard.isConfig = true;
       configCard.updateConfig = (newConfig: typeof this._haProps.config) => {
-        configCard?.setConfig?.(newConfig);
+        if (configCard?.setConfig) configCard.setConfig(newConfig);
         const event = new Event("config-changed", {
           bubbles: true,
           composed: true,
@@ -79,11 +86,31 @@ export function getSvelteHaCustomElement(cardName: string, Component: Partial<Sv
         if (!this._ready) {
           this._ready = true;
           this._element?.$set(this._haProps);
-          console.log(">>> init", this._haProps);
         } else {
           this._element.$set({ [propName]: value });
         }
       }
     }
   };
+}
+
+export function defineSvelteHaCard(
+  elementName: string,
+  Component: Partial<SvelteComponent>,
+  friendlyName?: string,
+  description?: string,
+  documentationURL?: string,
+  wrapInHaCard?: boolean,
+  stubConfig?: unknown
+) {
+  if (!customElements?.define) throw new Error("Unable to define customElement");
+  customElements.define(elementName, getSvelteHaCard(elementName, Component, wrapInHaCard, stubConfig));
+
+  window.customCards = window.customCards || [];
+  window.customCards.push({
+    type: elementName,
+    name: friendlyName || elementName,
+    description,
+    documentationURL,
+  });
 }
