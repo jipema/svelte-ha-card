@@ -1,12 +1,16 @@
 <script lang="ts">
-  export let title: HTMLElement | string | undefined = undefined;
+  export let title: string | undefined = undefined;
   export let titleHover: string | undefined = undefined;
   export let fullScreenOnMobile: boolean = true;
   export let onClose: (() => void) | undefined = undefined;
 
   let dialogRef: HTMLElement;
   $: {
-    if (dialogRef && dialogRef?.shadowRoot && !dialogRef.classList.contains("svc")) {
+    if (
+      dialogRef &&
+      dialogRef?.shadowRoot &&
+      !dialogRef.classList.contains("svc")
+    ) {
       dialogRef.addEventListener("closed", () => onClose?.());
       dialogRef.classList.add("svc");
 
@@ -22,20 +26,19 @@
         --dialog-content-position: static;
         --dialog-content-padding: 0;
         --chart-base-position: static;
-      } 
-      @media (max-width: 450px), (max-height: 500px){
-        :host{
-          ${
-            fullScreenOnMobile
-              ? `--mdc-dialog-min-width: calc( 100vw - env(safe-area-inset-right) - env(safe-area-inset-left) );
-          --mdc-dialog-max-width: calc( 100vw - env(safe-area-inset-right) - env(safe-area-inset-left) );
-          --mdc-dialog-min-height: 100%;
-          --mdc-dialog-max-height: 100%;
-          --vertical-align-dialog: flex-end;
-          --ha-dialog-border-radius: 0;`
-              : ``
-          }
-      }}`;
+      }`;
+      if (fullScreenOnMobile)
+        styleEl.innerHTML += `
+          @media (max-width: 450px), (max-height: 500px){
+            :host{
+              --mdc-dialog-min-width: calc( 100vw - env(safe-area-inset-right) - env(safe-area-inset-left) );
+              --mdc-dialog-max-width: calc( 100vw - env(safe-area-inset-right) - env(safe-area-inset-left) );
+              --mdc-dialog-min-height: 100%;
+              --mdc-dialog-max-height: 100%;
+              --vertical-align-dialog: flex-end;
+              --ha-dialog-border-radius: 0;
+            }
+          }`;
 
       dialogRef?.shadowRoot.appendChild(styleEl);
     }
@@ -43,7 +46,10 @@
 </script>
 
 <ha-dialog open hideactions flexcontent bind:this={dialogRef}>
-  <div class="dialog-wrapper" style={'display: "flex"; flex-direction: "column"; height: "100%"; overflow: "hidden"'}>
+  <div
+    class="dialog-wrapper"
+    style={'display: "flex"; flex-direction: "column"; height: "100%"; overflow: "hidden"'}
+  >
     {#if title || titleHover || onClose}
       <ha-dialog-header slot="heading">
         {#if onClose}
@@ -65,7 +71,7 @@
           </ha-icon-button>
         {/if}
         {#if title || titleHover}
-          <span slot="title" title={titleHover || (typeof title === "string" ? title : undefined)}>
+          <span slot="title" title={titleHover || title}>
             {title || titleHover}
           </span>
         {/if}
