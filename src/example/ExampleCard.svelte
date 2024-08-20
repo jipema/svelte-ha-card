@@ -1,14 +1,14 @@
 <svelte:options
   customElement={{
-    tag: "svelte-ha-test",
+    tag: "svelte-ha-card",
     extend: extendSvelteCustomElement(),
   }}
 />
 
 <script lang="ts">
+  import { extendSvelteCustomElement } from "../lib/svelteHaCustomElement";
   import type { ChangeEventHandler } from "svelte/elements";
-  import HaDialog from "./utils/HaDialog.svelte";
-  import { extendSvelteCustomElement } from "./utils/svelteHaCustomElement";
+  import HaDialog from "../lib/components/HaDialog.svelte";
 
   // props
   export let hass: Record<string, unknown>;

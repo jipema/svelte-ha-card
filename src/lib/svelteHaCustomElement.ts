@@ -30,8 +30,8 @@ export function extendSvelteCustomElement(options: CardOptions = {}) {
     customElementConstructor: CustomElementConstructor
   ) {
     return class extends customElementConstructor {
-      private host?: HTMLElement;
-      private config: Record<string, unknown> = {};
+      host?: HTMLElement;
+      config: Record<string, unknown> = {};
       public lovelace: Record<string, unknown> = {};
       public narrow: boolean = false;
       public isConfig: boolean;

@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: `svelte-ha-test.js`,
+        entryFileNames: `svelte-ha-card.js`,
       },
     },
   },
