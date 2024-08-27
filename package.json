@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/jipema/svelte-ha-card",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
-    "dev": "vite build --watch & vite preview --host --port 5173",
+    "dev": "IS_DEV=true vite build --watch & vite preview --host --port 5173",
     "build": "npm run build:js && npm run build:ts",
     "build:js": "vite build",
     "build:ts": "tsc --p ./tsconfig.d.json",
