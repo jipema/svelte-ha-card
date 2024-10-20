@@ -36,11 +36,12 @@ export function extendSvelteCustomElement(options: CardOptions = {}) {
       public narrow: boolean = false;
       public isConfig: boolean;
 
-      constructor(isConfig: boolean) {
+      constructor(isConfig?: boolean) {
         super();
         this.host = this;
         this.isConfig = isConfig || false;
         this.openMoreInfo = this.openMoreInfo.bind(this);
+        this.closeMoreInfo = this.closeMoreInfo.bind(this);
         this.updateConfig = this.updateConfig.bind(this);
       }
 
@@ -106,7 +107,8 @@ export function defineCard(
   window.customCards = window.customCards || [];
   if (window.customCards.find((c) => c.type === cardName)) return;
 
-  customElements.define(cardName, cardComponent.element);
+  if (!customElements.get(cardName))
+    customElements.define(cardName, cardComponent.element);
 
   window.customCards.push({
     type: cardName,

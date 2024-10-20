@@ -11,4 +11,6 @@ export type HassProps = {
   config?: Record<string, unknown>;
   isConfig?: boolean;
   updateConfig?: (newConfig: HassProps["config"]) => void;
+  openMoreInfo?: (entityId: string) => void;
+  closeMoreInfo?: () => void;
 };

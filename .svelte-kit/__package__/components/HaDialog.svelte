@@ -1,22 +1,15 @@
-<script lang="ts">
-  export let title: string | undefined = undefined;
-  export let titleHover: string | undefined = undefined;
-  export let fullScreenOnMobile: boolean = true;
-  export let onClose: (() => void) | undefined = undefined;
-  export let style: string;
-
-  let dialogRef: HTMLElement;
-  $: {
-    if (
-      dialogRef &&
-      dialogRef?.shadowRoot &&
-      !dialogRef.classList.contains("svc")
-    ) {
-      dialogRef.addEventListener("closed", () => onClose?.());
-      dialogRef.classList.add("svc");
-
-      const styleEl = document.createElement("style");
-      styleEl.innerHTML = `
+<script>export let title = void 0;
+export let titleHover = void 0;
+export let fullScreenOnMobile = true;
+export let onClose = void 0;
+export let style;
+let dialogRef;
+$: {
+  if (dialogRef && dialogRef?.shadowRoot && !dialogRef.classList.contains("svc")) {
+    dialogRef.addEventListener("closed", () => onClose?.());
+    dialogRef.classList.add("svc");
+    const styleEl = document.createElement("style");
+    styleEl.innerHTML = `
       :host{
         --mdc-dialog-min-width: 400px;
         --mdc-dialog-max-width: min(600px, 95vw);
@@ -28,8 +21,8 @@
         --dialog-content-padding: 0;
         --chart-base-position: static;
       }`;
-      if (fullScreenOnMobile)
-        styleEl.innerHTML += `
+    if (fullScreenOnMobile)
+      styleEl.innerHTML += `
           @media (max-width: 450px), (max-height: 500px){
             :host{
               --mdc-dialog-min-width: calc( 100vw - env(safe-area-inset-right) - env(safe-area-inset-left) );
@@ -40,10 +33,9 @@
               --ha-dialog-border-radius: 0;
             }
           }`;
-
-      dialogRef?.shadowRoot.appendChild(styleEl);
-    }
+    dialogRef?.shadowRoot.appendChild(styleEl);
   }
+}
 </script>
 
 <ha-dialog

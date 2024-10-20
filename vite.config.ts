@@ -11,8 +11,11 @@ export default defineConfig({
       : {
           entry: "./src/lib/index.ts",
           name: "svelte-ha-card",
+          fileName: (format) => `svelte-ha-card.${format}.js`,
+          formats: ["es", "umd"],
         },
     rollupOptions: {
+      external: ["svelte"],
       output: {
         entryFileNames: `svelte-ha-card.js`,
       },

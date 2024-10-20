@@ -17,22 +17,26 @@
   },
   "homepage": "https://github.com/jipema/svelte-ha-card",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.11",
   "type": "module",
   "scripts": {
     "dev": "IS_DEV=true vite build --watch & vite preview --host --port 5173",
-    "build": "npm run build:js && npm run build:ts",
+    "build": "npx @sveltejs/package",
+    "build:old": "npm run build:js && npm run build:ts",
     "build:js": "vite build",
     "build:ts": "tsc --p ./tsconfig.d.json",
     "publish:beta": "npm run build && npm publish --tag beta",
     "publish:release": "npm run build && npm publish"
   },
+  "dependencies": {
+    "custom-card-helpers": "^1.9.0",
+    "svelte": "^4.2.18"
+  },
   "devDependencies": {
+    "@sveltejs/package": "^2.3.5",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
-    "custom-card-helpers": "^1.9.0",
     "sass-embedded": "^1.77.8",
-    "svelte": "^4.2.18",
     "svelte-check": "^3.8.5",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3",
@@ -41,14 +45,15 @@
   "files": [
     "dist"
   ],
-  "module": "./dist/svelte-ha-card.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/svelte-ha-card.js",
-        "types": "./dist/index.d.ts"
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "svelte": "./dist/index.js"
       }
     }
-  },
-  "types": "./dist/index.d.ts"
+  }
 }
